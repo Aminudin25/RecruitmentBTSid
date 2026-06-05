@@ -1,0 +1,181 @@
+{
+  "info": {
+    "name": "Product Management API",
+    "description": "REST API for product management with JWT authentication\n\n## Quick Start\n1. Register: POST /api/auth/register\n2. Login: POST /api/auth/login → copy `authentication_token`\n3. Set Bearer token in Authorization header\n4. Use product endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000", "type": "string" },
+    { "key": "token",    "value": "",                      "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/register",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"jhon_doe\",\n  \"password\": \"supersecret\",\n  \"password_confirmation\": \"supersecret\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "const res = pm.response.json();",
+                "if (res.data && res.data.authentication_token) {",
+                "  pm.collectionVariables.set('token', res.data.authentication_token);",
+                "  console.log('Token saved:', res.data.authentication_token);",
+                "}"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Me (whoami)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/auth/me",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/refresh",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/logout",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/products?limit=10&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"],
+              "query": [
+                { "key": "limit",    "value": "10" },
+                { "key": "page",     "value": "1" },
+                { "key": "search",   "value": "",  "disabled": true },
+                { "key": "category", "value": "",  "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Products — Search by keyword",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/products?search=shirt"
+          }
+        },
+        {
+          "name": "List Products — Filter by category",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/products?category=Clothes"
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/products/1"
+          }
+        },
+        {
+          "name": "Get Product — 404 Example",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/products/9999"
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/products",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Awesome T-Shirt\",\n  \"price\": 99.99,\n  \"description\": \"High-quality cotton t-shirt\",\n  \"category\": \"Clothes\",\n  \"images\": [\"https://placeimg.com/640/480/any\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Product — Validation Error (400)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/products",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": -10\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/api/products/1",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated T-Shirt\",\n  \"price\": 79.99\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/products/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    }
+  ]
+}

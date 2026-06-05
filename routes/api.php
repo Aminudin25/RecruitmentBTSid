@@ -12,8 +12,14 @@ use Illuminate\Support\Facades\Route;
 
 // ── Auth Routes ────────────────────────────────────────────────
 Route::prefix('auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
-    Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+    // Rate limit: 3 requests per 1 minute for auth endpoints
+    Route::post('/register', [AuthController::class, 'register'])
+        ->middleware('throttle:3,1')
+        ->name('auth.register');
+    
+    Route::post('/login', [AuthController::class, 'login'])
+        ->middleware('throttle:3,1')
+        ->name('auth.login');
 
     Route::middleware('auth:api')->group(function () {
         Route::post('/logout',  [AuthController::class, 'logout'])->name('auth.logout');
@@ -30,9 +36,18 @@ Route::prefix('products')->group(function () {
     Route::get('/{id}', [ProductController::class, 'show'])->name('products.show');
 
     // Protected: mutating operations (auth required)
+    // Rate limit: 12 per 1 minute (1 per 5 seconds) for write operations
     Route::middleware(['auth:api'])->group(function () {
-        Route::post('/', [ProductController::class, 'store'])->name('products.store');
-        Route::put('/{id}', [ProductController::class, 'update'])->name('products.update');
-        Route::delete('/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+        Route::post('/', [ProductController::class, 'store'])
+            ->middleware('throttle:12,1')
+            ->name('products.store');
+        
+        Route::put('/{id}', [ProductController::class, 'update'])
+            ->middleware('throttle:12,1')
+            ->name('products.update');
+        
+        Route::delete('/{id}', [ProductController::class, 'destroy'])
+            ->middleware('throttle:12,1')
+            ->name('products.destroy');
     });
 });

@@ -225,7 +225,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::HXB2zRuyS3kk4RNm',
+            '_route' => 'generated::CQfFNJs8vr04b1UA',
           ),
           1 => NULL,
           2 => 
@@ -546,6 +546,7 @@ app('router')->setCompiledRoutes(
         'middleware' => 
         array (
           0 => 'api',
+          1 => 'throttle:3,1',
         ),
         'uses' => 'App\\Http\\Controllers\\AuthController@register',
         'controller' => 'App\\Http\\Controllers\\AuthController@register',
@@ -582,6 +583,7 @@ app('router')->setCompiledRoutes(
         'middleware' => 
         array (
           0 => 'api',
+          1 => 'throttle:3,1',
         ),
         'uses' => 'App\\Http\\Controllers\\AuthController@login',
         'controller' => 'App\\Http\\Controllers\\AuthController@login',
@@ -805,6 +807,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 'api',
           1 => 'auth:api',
+          2 => 'throttle:12,1',
         ),
         'uses' => 'App\\Http\\Controllers\\ProductController@store',
         'controller' => 'App\\Http\\Controllers\\ProductController@store',
@@ -842,6 +845,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 'api',
           1 => 'auth:api',
+          2 => 'throttle:12,1',
         ),
         'uses' => 'App\\Http\\Controllers\\ProductController@update',
         'controller' => 'App\\Http\\Controllers\\ProductController@update',
@@ -879,6 +883,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 'api',
           1 => 'auth:api',
+          2 => 'throttle:12,1',
         ),
         'uses' => 'App\\Http\\Controllers\\ProductController@destroy',
         'controller' => 'App\\Http\\Controllers\\ProductController@destroy',
@@ -903,7 +908,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::HXB2zRuyS3kk4RNm' => 
+    'generated::CQfFNJs8vr04b1UA' => 
     array (
       'methods' => 
       array (
@@ -932,7 +937,7 @@ app('router')->setCompiledRoutes(
                         \'exception\' => $exception,
                     ]), status: $exception ? 500 : 200);
                 }";s:5:"scope";s:54:"Illuminate\\Foundation\\Configuration\\ApplicationBuilder";s:4:"this";N;s:4:"self";s:32:"00000000000003170000000000000000";}}',
-        'as' => 'generated::HXB2zRuyS3kk4RNm',
+        'as' => 'generated::CQfFNJs8vr04b1UA',
       ),
       'fallback' => false,
       'defaults' => 
